@@ -1,9 +1,11 @@
-; Main.tscn — root scene wiring Player, UI, and a couple of pickups
-[gd_scene load_steps=4 format=3]
+; scenes/Main.tscn — Step 2: add InteractableButton + Door with signal wiring (keep pickups)
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/UI.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/TimePickup.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/InteractableButton.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/Door.tscn" id="5"]
 
 [node name="Main" type="Node2D"]
 
@@ -11,10 +13,20 @@
 
 [node name="UI" parent="." instance=ExtResource("2")]
 
-[node name="Pickups" type="Node2D" parent="."]
+[node name="World" type="Node2D" parent="."]
 
-[node name="TimePickup1" parent="Pickups" instance=ExtResource("3")]
+[node name="Pickups" type="Node2D" parent="World"]
+
+[node name="TimePickup1" parent="World/Pickups" instance=ExtResource("3")]
 position = Vector2(120, 0)
 
-[node name="TimePickup2" parent="Pickups" instance=ExtResource("3")]
+[node name="TimePickup2" parent="World/Pickups" instance=ExtResource("3")]
 position = Vector2(240, 80)
+
+[node name="Button" parent="World" instance=ExtResource("4")]
+position = Vector2(160, 80)
+
+[node name="Door" parent="World" instance=ExtResource("5")]
+position = Vector2(320, 80)
+
+[connection signal="activated" from="World/Button" to="World/Door" method="try_open"]
