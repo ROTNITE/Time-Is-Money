@@ -1,16 +1,28 @@
-# Godot 4+ specific ignores
-.godot/
-.nomedia
+# .gitignore — Godot 4.5
 
-# Godot-specific ignores
+# Godot caches and imports
+/.godot/
 .import/
-export.cfg
-export_credentials.cfg
+# Mono (C#) artifacts (if enabled)
+/.mono/
 
-# Imported translations (automatically generated from CSV files)
-*.translation
+# Builds / exports (optional if you generate them here)
+/export/
+/build/
+/bin/
 
-# Mono-specific ignores
-.mono/
-data_*/
-mono_crash.*.json
+# OS junk
+.DS_Store
+Thumbs.db
+
+# IDEs / editors
+.vscode/
+.idea/
+*.suo
+*.user
+*.userossc
+*.sln.docstates
+
+# Logs / temps
+*.log
+*.tmp
