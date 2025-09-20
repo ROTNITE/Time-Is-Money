@@ -1,0 +1,9 @@
+; project.godot — Godot 4.5 minimal stub
+; Prefer editing via Project Settings in the editor.
+
+config_version=5
+
+[application]
+
+config/name="Time Is Money"
+run/main_scene="res://Main.tscn"
