@@ -1,0 +1,30 @@
+# .gitattributes — normalize line endings and mark binaries
+
+* text=auto
+
+# Enforce LF for source & text
+*.gd      text eol=lf
+*.tscn    text eol=lf
+*.tres    text eol=lf
+*.cfg     text eol=lf
+*.ini     text eol=lf
+*.md      text eol=lf
+*.txt     text eol=lf
+*.json    text eol=lf
+*.yml     text eol=lf
+*.shader  text eol=lf
+
+# Binary assets (no diffs)
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.wav  binary
+*.ogg  binary
+*.mp3  binary
+*.ttf  binary
+*.otf  binary
+*.ico  binary
+*.exe  binary
+*.dll  binary
+*.pck  binary
+*.zip  binary
