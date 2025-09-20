@@ -1,0 +1,108 @@
+; scenes/Level_Greybox.tscn — один законченный уровень-комната
+[gd_scene load_steps=12 format=3]
+
+; Внешние сцены/скрипты
+[ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/UI.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/InteractableButton.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/Door.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/TimePickup.tscn" id="5"]
+[ext_resource type="Script" path="res://scripts/ExitArea.gd" id="6"]
+
+; Примитивная геометрия (прямоугольники)
+[sub_resource type="RectangleShape2D" id="1"]
+size = Vector2(640, 16)
+
+[sub_resource type="RectangleShape2D" id="2"]
+size = Vector2(16, 360)
+
+[sub_resource type="RectangleShape2D" id="3"]
+size = Vector2(240, 16)
+
+[sub_resource type="RectangleShape2D" id="4"]
+size = Vector2(120, 16)
+
+[sub_resource type="RectangleShape2D" id="5"]
+size = Vector2(64, 48)  ; зона выхода
+
+[node name="Level_Greybox" type="Node2D"]
+
+; Игрок и HUD
+[node name="Player" parent="." instance=ExtResource("1")]
+position = Vector2(48, 304)
+
+[node name="UI" parent="." instance=ExtResource("2")]
+
+; Геометрия: прямоугольная комната + препятствия
+[node name="Geometry" type="Node2D" parent="."]
+
+; Пол/потолок
+[node name="Floor" type="StaticBody2D" parent="Geometry"]
+position = Vector2(320, 360)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Geometry/Floor"]
+position = Vector2(0, 0)
+shape = SubResource("1")
+
+[node name="Ceil" type="StaticBody2D" parent="Geometry"]
+position = Vector2(320, 16)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Geometry/Ceil"]
+shape = SubResource("1")
+
+; Лев/прав стены
+[node name="LeftWall" type="StaticBody2D" parent="Geometry"]
+position = Vector2(16, 188)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Geometry/LeftWall"]
+shape = SubResource("2")
+
+[node name="RightWall" type="StaticBody2D" parent="Geometry"]
+position = Vector2(624, 188)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Geometry/RightWall"]
+shape = SubResource("2")
+
+; Внутреннее препятствие (длинный обход) — верхняя полка
+[node name="ObstacleTop" type="StaticBody2D" parent="Geometry"]
+position = Vector2(280, 180)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Geometry/ObstacleTop"]
+shape = SubResource("3")
+
+; Внутреннее препятствие (узкое место) — нижняя полка
+[node name="ObstacleBottom" type="StaticBody2D" parent="Geometry"]
+position = Vector2(420, 260)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Geometry/ObstacleBottom"]
+shape = SubResource("4")
+
+; Мир: кнопка/дверь/пикапы
+[node name="World" type="Node2D" parent="."]
+
+; Кнопка (стоит 3с) — открывает дверь (10с). Трейд-офф: заплати 3с сейчас, чтобы не платить 10с у двери.
+[node name="Button" parent="World" instance=ExtResource("3")]
+position = Vector2(200, 150)
+
+[node name="Door" parent="World" instance=ExtResource("4")]
+position = Vector2(360, 150)
+
+; Пикапы (часы). Один на безопасном пути, второй — за дверью (ускоряет финиш).
+[node name="Pickups" type="Node2D" parent="World"]
+
+[node name="TimePickup1" parent="World/Pickups" instance=ExtResource("5")]
+position = Vector2(140, 300)
+
+[node name="TimePickup2" parent="World/Pickups" instance=ExtResource("5")]
+position = Vector2(460, 150)
+
+; Зона выхода
+[node name="Exit" type="Area2D" parent="."]
+script = ExtResource("6")
+position = Vector2(592, 64)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Exit"]
+shape = SubResource("5")
+
+; Подсказочный прямоугольник-«старт»
+[node name="StartMarker" type="StaticBody2D" parent="Geometry"]
+position = Vector2(48, 320)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Geometry/StartMarker"]
+shape = SubResource("4")
+
+; Соединение: кнопка активирует дверь
+[connection signal="activated" from="World/Button" to="World/Door" method="try_open"]
